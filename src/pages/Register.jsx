@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Register() {
+  const { register } = useAuth();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -14,9 +16,13 @@ export default function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Mock registration - in real app, this would make an API call
-    console.log("Registration data:", formData);
-    navigate("/login");
+    try {
+      register(formData);
+      alert("Registration successful! Please login with your credentials.");
+      navigate("/login");
+    } catch (error) {
+      alert("Registration failed. Please try again.");
+    }
   };
 
   const handleChange = (e) => {

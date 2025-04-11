@@ -7,30 +7,35 @@ import { Helmet } from "react-helmet";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAuth();
+  const [isAdminLogin, setIsAdminLogin] = useState(false);
+  const [error, setError] = useState("");
+  const { authenticateUser, login } = useAuth();
   const { darkMode } = useTheme();
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Mock login with test account
-    if (email === "test@example.com" && password === "password123") {
-      login({
-        firstName: "Test",
-        email: email,
-      });
-      navigate("/");
-    } else {
-      alert(
-        "Please use the test account:\nEmail: test@example.com\nPassword: password123"
-      );
+    setError("");
+
+    try {
+      const authResult = authenticateUser(email, password);
+      if (authResult) {
+        login(authResult.user, authResult.isAdmin);
+        navigate(authResult.isAdmin ? "/admin" : "/");
+      } else {
+        setError("Invalid credentials!");
+      }
+    } catch (error) {
+      setError(error.message);
     }
   };
 
   return (
     <>
       <Helmet>
-        <title>Login | English-Khmer Dictionary</title>
+        <title>
+          {isAdminLogin ? "Admin Login" : "Login"} | English-Khmer Dictionary
+        </title>
         <meta
           name="description"
           content="Login to access your saved words, favorites, and more features."
@@ -49,20 +54,65 @@ export default function Login() {
                 darkMode ? "text-white" : "text-gray-900"
               }`}
             >
-              Sign in to your account
+              {isAdminLogin ? "Admin Login" : "Sign in to your account"}
             </h2>
-            <p
-              className={`mt-2 text-center text-sm ${
-                darkMode ? "text-gray-400" : "text-gray-600"
+            {!isAdminLogin && (
+              <p
+                className={`mt-2 text-center text-sm ${
+                  darkMode ? "text-gray-400" : "text-gray-600"
+                }`}
+              >
+                Test Account:
+                <br />
+                Email: test@example.com
+                <br />
+                Password: password123
+              </p>
+            )}
+            {isAdminLogin && (
+              <p
+                className={`mt-2 text-center text-sm ${
+                  darkMode ? "text-gray-400" : "text-gray-600"
+                }`}
+              >
+                Admin Account:
+                <br />
+                Email: admin@example.com
+                <br />
+                Password: admin123
+              </p>
+            )}
+          </div>
+
+          <div className="flex justify-center space-x-4">
+            <button
+              onClick={() => setIsAdminLogin(false)}
+              className={`px-4 py-2 rounded-md ${
+                !isAdminLogin
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 text-gray-700"
               }`}
             >
-              Test Account:
-              <br />
-              Email: test@example.com
-              <br />
-              Password: password123
-            </p>
+              User Login
+            </button>
+            <button
+              onClick={() => setIsAdminLogin(true)}
+              className={`px-4 py-2 rounded-md ${
+                isAdminLogin
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
+            >
+              Admin Login
+            </button>
           </div>
+
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+              {error}
+            </div>
+          )}
+
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="rounded-md shadow-sm -space-y-px">
               <div>
@@ -114,14 +164,16 @@ export default function Login() {
               </button>
             </div>
 
-            <div className="text-center">
-              <Link
-                to="/register"
-                className="font-medium text-blue-600 hover:text-blue-500"
-              >
-                Don't have an account? Sign up
-              </Link>
-            </div>
+            {!isAdminLogin && (
+              <div className="text-center">
+                <Link
+                  to="/register"
+                  className="font-medium text-blue-600 hover:text-blue-500"
+                >
+                  Don't have an account? Sign up
+                </Link>
+              </div>
+            )}
           </form>
         </div>
       </div>

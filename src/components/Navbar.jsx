@@ -12,11 +12,17 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const { darkMode, toggleTheme } = useTheme();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev);
+
+  const defaultAvatar = (
+    <UserCircleIcon
+      className={`h-8 w-8 ${darkMode ? "text-gray-300" : "text-gray-600"}`}
+    />
+  );
 
   return (
     <nav className={`${darkMode ? "bg-gray-800" : "bg-white"} shadow-lg`}>
@@ -76,6 +82,20 @@ export default function Navbar() {
                   Welcome, {user.firstName}
                 </span>
 
+                {/* Admin Dashboard Link */}
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    className={`${
+                      darkMode
+                        ? "text-gray-300 hover:text-white"
+                        : "text-gray-600 hover:text-gray-900"
+                    }`}
+                  >
+                    Admin
+                  </Link>
+                )}
+
                 {/* Favorites and Profile icons */}
                 <Link
                   to="/favorites"
@@ -95,7 +115,15 @@ export default function Navbar() {
                       : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
-                  <UserCircleIcon className="h-6 w-6" />
+                  {user.profilePicture ? (
+                    <img
+                      src={user.profilePicture}
+                      alt="Profile"
+                      className="h-8 w-8 rounded-full"
+                    />
+                  ) : (
+                    defaultAvatar
+                  )}
                 </Link>
 
                 {/* Mobile hamburger menu */}
