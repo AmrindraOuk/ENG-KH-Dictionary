@@ -1,5 +1,15 @@
 export const recommendedWords = [
   {
+    id: 109876345,
+    word: "ទេវី ជាពាក្យសំស្រ្កឹតសម្រាប់ ទេពធីតា",
+    pronunciation: "/Devi or Thevy/",
+    englishMeaning: "Devi",
+    examples: [
+      'ទេវីគឺជាព្រះ (Devi Praeh Jaa Mchach): "Devi is the Lord/God," or "Devi is the deity."',
+      'នាងជាទេវីដ៏ស្រស់ស្អាត (Neang jea Devi da sraos saaat): "She is a beautiful Devi."',
+    ],
+  },
+  {
     id: 1,
     word: "ការងារ",
     pronunciation: "/kar ŋia/",

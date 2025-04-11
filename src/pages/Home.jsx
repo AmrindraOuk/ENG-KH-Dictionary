@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { StarIcon } from "@heroicons/react/24/outline";
 import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
+import { Helmet } from "react-helmet";
 
 export default function Home() {
   const [searchResults, setSearchResults] = useState(null);
@@ -70,65 +71,77 @@ export default function Home() {
     const isFavorite = favorites.some((fav) => fav.id === word.id);
 
     return (
-      <div
-        key={word.id}
-        className={`${
-          darkMode ? "bg-gray-800" : "bg-white"
-        } p-6 rounded-lg shadow-md mb-4`}
-      >
-        <div className="flex justify-between items-start">
-          <div>
-            <p
-              className={`text-lg ${
-                darkMode ? "text-gray-300" : "text-gray-800"
-              } mb-2 text-2xl font-bold`}
+      <>
+        <Helmet>
+          <title>English-Khmer Dictionary | Home</title>
+          <meta
+            name="description"
+            content="Welcome to the best English to Khmer dictionary online. Start exploring vocabulary now!"
+          />
+        </Helmet>
+
+        <div
+          key={word.id}
+          className={`${
+            darkMode ? "bg-gray-800" : "bg-white"
+          } p-6 rounded-lg shadow-md mb-4`}
+        >
+          <div className="flex justify-between items-start">
+            <div>
+              <p
+                className={`text-2xl ${
+                  darkMode ? "text-gray-300" : "text-gray-800"
+                } mb-2 text-2xl font-bold`}
+              >
+                {word.englishMeaning}
+              </p>
+              <h3
+                className={`text-xl font-bold ${
+                  darkMode ? "text-white" : "text-gray-900"
+                }`}
+              >
+                {word.word}
+              </h3>
+              <p
+                className={`${
+                  darkMode ? "text-gray-400" : "text-gray-600"
+                } mt-1`}
+              >
+                {word.pronunciation}
+              </p>
+            </div>
+            <button
+              onClick={() => handleFavorite(word)}
+              className="text-yellow-500 hover:text-yellow-600"
             >
-              {word.englishMeaning}
-            </p>
-            <h3
-              className={`text-2xl font-bold ${
-                darkMode ? "text-white" : "text-gray-900"
+              {isFavorite ? (
+                <StarIconSolid className="h-6 w-6" />
+              ) : (
+                <StarIcon className="h-6 w-6" />
+              )}
+            </button>
+          </div>
+          <div className="mt-4">
+            <h4
+              className={`font-semibold ${
+                darkMode ? "text-gray-300" : "text-gray-700"
               }`}
             >
-              {word.word}
-            </h3>
-            <p
-              className={`${darkMode ? "text-gray-400" : "text-gray-600"} mt-1`}
-            >
-              {word.pronunciation}
-            </p>
+              Examples:
+            </h4>
+            <ul className="mt-2 space-y-2">
+              {word.examples.map((example, index) => (
+                <li
+                  key={index}
+                  className={`${darkMode ? "text-gray-400" : "text-gray-600"}`}
+                >
+                  {example}
+                </li>
+              ))}
+            </ul>
           </div>
-          <button
-            onClick={() => handleFavorite(word)}
-            className="text-yellow-500 hover:text-yellow-600"
-          >
-            {isFavorite ? (
-              <StarIconSolid className="h-6 w-6" />
-            ) : (
-              <StarIcon className="h-6 w-6" />
-            )}
-          </button>
         </div>
-        <div className="mt-4">
-          <h4
-            className={`font-semibold ${
-              darkMode ? "text-gray-300" : "text-gray-700"
-            }`}
-          >
-            Examples:
-          </h4>
-          <ul className="mt-2 space-y-2">
-            {word.examples.map((example, index) => (
-              <li
-                key={index}
-                className={`${darkMode ? "text-gray-400" : "text-gray-600"}`}
-              >
-                {example}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      </>
     );
   };
 
