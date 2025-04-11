@@ -10,6 +10,26 @@ export const recommendedWords = [
     ],
   },
   {
+    id: 1256,
+    word: "ស្រួលដូចបកចែកចឹង",
+
+    englishMeaning: "Piece of cake",
+    examples: [
+      "វាស្រួលដូចបកចែកចឹង - It's a piece of cake",
+      "ល្បែងនេះស្រួលដូចបកចែកចឹង - This game is a piece of cake",
+    ],
+  },
+  {
+    id: 13246,
+    word: "ទម្រាំតែ ទម្រាំអោយ",
+    englishMeaning: "Let alone",
+    examples: [
+      "ខ្ញុំមិនសូវចេះបើកឡានស្ទាត់ផងទម្រាំអោយធ្វើ​ដំណើរ​ក្នុង​ទីក្រុង​ដ៏​មមាញឹកទៀត ។ - I can barely drive, let alone navigate a busy city.",
+      "គាត់មិនមានលុយគ្រប់គ្រាន់សម្រាប់វិស្សមកាលផងទម្រាំតែចង់បានឡានថ្មី ។ - He doesn't have enough money for a vacation, let alone a new car.",
+    ],
+  },
+
+  {
     id: 1,
     word: "ការងារ",
     pronunciation: "/kar ŋia/",
