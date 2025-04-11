@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import { recommendedWords } from "../data/dictionaryData";
@@ -10,13 +10,24 @@ import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
 export default function Home() {
   const [searchResults, setSearchResults] = useState(null);
   const [showRecommended, setShowRecommended] = useState(true);
+  const [cachedWords, setCachedWords] = useState([]);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
   const { user, favorites, addToFavorites, removeFromFavorites, words } =
     useAuth();
   const { darkMode } = useTheme();
   const navigate = useNavigate();
 
+  const allWords = [...recommendedWords, ...words];
+  const loadBatchSize = 3;
+
+  useEffect(() => {
+    if (showRecommended && cachedWords.length === 0) {
+      setCachedWords(allWords.slice(0, loadBatchSize));
+    }
+  }, [showRecommended, allWords]);
+
   const handleSearch = (term) => {
-    const allWords = [...recommendedWords, ...words];
     const results = allWords.filter(
       (word) =>
         word.word.toLowerCase().includes(term.toLowerCase()) ||
@@ -31,13 +42,8 @@ export default function Home() {
       navigate("/login");
       return;
     }
-
     const isFavorite = favorites.some((fav) => fav.id === word.id);
-    if (isFavorite) {
-      removeFromFavorites(word);
-    } else {
-      addToFavorites(word);
-    }
+    isFavorite ? removeFromFavorites(word) : addToFavorites(word);
   };
 
   const handleAddWord = () => {
@@ -46,6 +52,18 @@ export default function Home() {
       return;
     }
     navigate("/add-word");
+  };
+
+  const handleLoadMore = () => {
+    setIsLoadingMore(true);
+    setTimeout(() => {
+      const nextBatch = allWords.slice(
+        cachedWords.length,
+        cachedWords.length + loadBatchSize
+      );
+      setCachedWords((prev) => [...prev, ...nextBatch]);
+      setIsLoadingMore(false);
+    }, 500); // simulate delay
   };
 
   const renderWord = (word) => {
@@ -67,7 +85,6 @@ export default function Home() {
             >
               {word.englishMeaning}
             </p>
-
             <h3
               className={`text-2xl font-bold ${
                 darkMode ? "text-white" : "text-gray-900"
@@ -115,8 +132,6 @@ export default function Home() {
     );
   };
 
-  const allWords = [...recommendedWords, ...words];
-
   return (
     <div
       className={`max-w-4xl mx-auto px-4 py-8 ${
@@ -157,9 +172,20 @@ export default function Home() {
                     darkMode ? "text-white" : "text-gray-800"
                   } mb-4`}
                 >
-                  All Words
+                  Recommended Words
                 </h2>
-                {allWords.map(renderWord)}
+                {cachedWords.map(renderWord)}
+                {cachedWords.length < allWords.length && (
+                  <div className="text-center mt-6">
+                    <button
+                      onClick={handleLoadMore}
+                      disabled={isLoadingMore}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+                    >
+                      {isLoadingMore ? "Loading..." : "Load More"}
+                    </button>
+                  </div>
+                )}
               </>
             ) : (
               searchResults?.map(renderWord)
