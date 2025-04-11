@@ -88,20 +88,20 @@ export default function Home() {
         >
           <div className="flex justify-between items-start">
             <div>
-              <p
+              <h3
                 className={`text-2xl ${
                   darkMode ? "text-gray-300" : "text-gray-800"
                 } mb-2 text-2xl font-bold`}
               >
                 {word.englishMeaning}
-              </p>
-              <h3
+              </h3>
+              <p
                 className={`text-xl font-bold ${
                   darkMode ? "text-white" : "text-gray-900"
                 }`}
               >
                 {word.word}
-              </h3>
+              </p>
               <p
                 className={`${
                   darkMode ? "text-gray-400" : "text-gray-600"
@@ -157,6 +157,13 @@ export default function Home() {
         } mb-8`}
       >
         English-Khmer Dictionary
+        {/* <p
+          className={`text-lg text-center ${
+            darkMode ? "text-white" : "text-gray-900"
+          }`}
+        >
+          It is more than just vocabulary; it is a bridge to understanding.
+        </p> */}
       </h1>
 
       <SearchBar onSearch={handleSearch} />
